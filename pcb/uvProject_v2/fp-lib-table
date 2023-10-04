@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name "Switch_TH")(type "KiCad")(uri "${KIPRJMOD}/lib/OS102011MS2QN1")(options "")(descr ""))
+  (lib (name "ESP8266_12E")(type "KiCad")(uri "${KIPRJMOD}/lib/ESP8266-12E_ESP-12E")(options "")(descr ""))
+)
