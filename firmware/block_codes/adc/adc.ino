@@ -1,14 +1,14 @@
 #include <Ticker.h>
-#define LED D4
-#define UV  A0
+#define LED 2//D4
+#define UV  A0//A0
 Ticker blinker;
 
 float avgVoltage(int nReadings);
 float voltToIntensity(float voltage);
 bool debug = true;
 float uvIntensity = 0.0;
-float RES = 1023.0;//ADC resolution
-float REF = 3.684;//variable obtained through calibration
+float RES = 1023.0;//1023.0;//ADC resolution
+float REF = 3.65;//variable obtained through calibration
 void setup() {
   // Open serial communications and wait for port to open:
   if(debug) Serial.begin(115200);
