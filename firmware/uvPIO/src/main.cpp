@@ -16,11 +16,11 @@ ESP12E
 - LED 4
 - ADC A0
 */
-#define CS  15 //15 
-#define LED 2 //4
+#define CS  D8 //GPIO15 
+#define LED D4 //GPIO2
 #define UV  A0 // A0
-#define sleep_waiting 5000 //10 seconds
-#define sleep_time 5e6 // time for each sleep
+#define sleep_waiting 10e3 //10 seconds
+#define sleep_time 2e6 // time for each sleep
 
 bool debug = true; // true to activate debug prints
 String title = "uvData.csv";
@@ -79,8 +79,9 @@ void setup() {
     if (currentMillis >= sleep_waiting) {
       if(debug) Serial.println("Setup to sleep for every indefinitely");
       if(debug) Serial.flush();
-      ESP.deepSleep(0); 
+      ESP.deepSleep(0);
     }
+    delay(1000);
   }
   if(debug) Serial.println("initialization done.");
   
@@ -93,14 +94,16 @@ void setup() {
     writingSD(fileHeader, title);
   }
   if(debug) Serial.println(title + " exists");
-  uvIntensity = voltToIntensity(avgVoltage(20)); //Convert the voltage to a UV intensity level
+  //Convert the voltage to a UV intensity level
+  uvIntensity = voltToIntensity(avgVoltage(20));
   message = currentTime() +", "+ String(uvIntensity);
   writingSD(message, title);
   if(debug) readingSD(title);
+  if(debug) Serial.println(message);
 
   if(debug) Serial.println("I'm awake, but I'm going into deep sleep mode for 60 seconds");
   if(debug) Serial.flush();
-  ESP.deepSleep(sleep_time); 
+  ESP.deepSleep(sleep_time);
 }
 
 void loop() {
