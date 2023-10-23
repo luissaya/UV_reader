@@ -1,5 +1,7 @@
+
 #include <SPI.h>
 #include <SD.h>
+#define CS_PIN D8
 
 File myFile;
 
@@ -9,7 +11,7 @@ void setup() {
 
   Serial.print("Initializing SD card...");
 
-  if (!SD.begin(15)) {
+  if (!SD.begin(CS_PIN)) {
     Serial.println("initialization failed!");
     return;
   }

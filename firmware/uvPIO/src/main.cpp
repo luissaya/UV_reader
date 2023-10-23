@@ -16,11 +16,11 @@ ESP12E
 - LED 4
 - ADC A0
 */
-#define CS  D8 //GPIO15 
-#define LED D4 //GPIO2
+#define CS  D8 //GPIO15 D8 
+#define LED D4 //GPIO2 D4
 #define UV  A0 // A0
 #define sleep_waiting 10e3 //10 seconds
-#define sleep_time 2e6 // time for each sleep
+#define sleep_time 60e6 // time for each sleep
 
 bool debug = true; // true to activate debug prints
 String title = "uvData.csv";

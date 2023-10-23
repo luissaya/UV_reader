@@ -35,3 +35,19 @@ Read UV-A and UV-B radiation each minute and save the values with timestamp on a
 | RX    | GPIO3  | OK            | RX pin                | HIGH at boot                                                    |
 | TX    | GPIO1  | TX pin        | OK                    | HIGH at boot, debug output at boot, boot fails if pulled LOW    |
 | A0    | ADC0   | Analog        | Input                 | X                                                               |
+
+## Calibration
+
+Calculus to obtain the voltaje for genering UV intensity:
+
+```bash
+Vout = Vref x Nread/1023
+```
+
+`Vref` is the reference value to obtain:
+- `Vout`: is read with multimeter.
+- `Nread`: is read with ADC.
+
+```bash
+Vref = Vout x 1023/Nread
+```

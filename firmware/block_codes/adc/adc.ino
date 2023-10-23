@@ -22,7 +22,7 @@ void loop(){
   Serial.println("Average voltage: "+ String(avgVoltage(20)));
   uvIntensity = voltToIntensity(avgVoltage(20)); //Convert the voltage to a UV intensity level
   Serial.println("UV Intensity: "+ String(uvIntensity));
-  delay(2000);
+  delay(1000);
 }
 
 
