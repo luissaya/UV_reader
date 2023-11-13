@@ -22,7 +22,7 @@ ESP12E
 #define sleep_waiting 10e3 //10 seconds
 #define sleep_time 60e6 // time for each sleep
 
-bool debug = true; // true to activate debug prints
+bool debug = false; // true to activate debug prints
 String title = "uvData.csv";
 String fileHeader = "Fecha(DD/MM/AAAA), Hora(HH:MM:SS), UV Intensity(mW/cm^2)";
 String message = "";
@@ -68,7 +68,9 @@ void setup() {
     if(debug) Serial.println("RTC is NOT running, let's set the time!");
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-//  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+/////////////////////////////////////////////////////
+// rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));//set the time with the compiled one
+////////////////////////////////////////////////////
 // rtc.adjust(DateTime(2023, 4, 9, 11, 47, 0));
   
   if(debug) Serial.print("Initializing SD card...");
@@ -98,7 +100,7 @@ void setup() {
   uvIntensity = voltToIntensity(avgVoltage(20));
   message = currentTime() +", "+ String(uvIntensity);
   writingSD(message, title);
-  if(debug) readingSD(title);
+  // if(debug) readingSD(title);
   if(debug) Serial.println(message);
 
   if(debug) Serial.println("I'm awake, but I'm going into deep sleep mode for 60 seconds");
