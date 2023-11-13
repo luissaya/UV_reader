@@ -38,16 +38,20 @@ Read UV-A and UV-B radiation each minute and save the values with timestamp on a
 
 ## Calibration
 
-Calculus to obtain the voltaje for genering UV intensity:
+Calculus to obtain the reference voltaje for genering UV intensity:
 
-```bash
-Vout = Vref x Nread/1023
-```
-
-`Vref` is the reference value to obtain:
+- `Vref` is the reference value to obtain:
 - `Vout`: is read with multimeter.
 - `Nread`: is read with ADC.
 
 ```bash
-Vref = Vout x 1023/Nread
+Vref = Vout x 1023 / Nread
+Vref = 3.684
+```
+
+In the main code, put the next expression:  
+
+```bash
+Vout = Vref x Nread / 1023
+Vout = 3.684 x Nread / 1023
 ```
