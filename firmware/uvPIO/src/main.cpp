@@ -1,40 +1,48 @@
+/*
+Repository: https://github.com/luissaya/UV_reader
+Project: UV radiation data collector
+Author: Luis Sayaverde Bravo
+v1.04
+*/
 #include <SPI.h>
 #include <SD.h>
 #include <Ticker.h>
 #include "RTClib.h"
 /*
-ESP32 
-- I2C: SDA 21 / SCL 22
-- SPI: CS 5 / MOSI 23 / MISO 19 / CLK 18
-- LED 15
-- ADC 34
-*/
-/*
 ESP12E 
-- I2C: SDA
-- SPI: CS 15
-- LED 4
-- ADC A0
+- I2C:  SDA=GPIO4, 
+        SCL=GPIO5
+- SPI:  MISO=GPIO12, 
+        MOSI=GPIO13, 
+        CSK=GPIO14 
+        CS=GPIO15 <> D8
+- LED:  GPIO2 <> D4
+- ADC:  A0
 */
+
+// CONSTANTS //
 #define CS  D8 //GPIO15 D8 
 #define LED D4 //GPIO2 D4
 #define UV  A0 // A0
-#define sleep_waiting 10e3 //10 seconds
-#define sleep_time 60e6 // time for each sleep
+#define sleep_waiting 10e3 //time for sleep indefinitely if there is an error
+#define sleep_time 60e6 //time for take each measurement
+bool debug = false; //true to activate debug prints
+String title = "uvData.csv";//csv file name
+String fileHeader = "Fecha(DD/MM/AAAA), Hora(HH:MM:SS), UV Intensity(mW/cm^2)";//header of csv file
+float RES = 1023.0;//ADC resolution
+float REF = 3.684;//variable obtained through calibration
 
-bool debug = false; // true to activate debug prints
-String title = "uvData.csv";
-String fileHeader = "Fecha(DD/MM/AAAA), Hora(HH:MM:SS), UV Intensity(mW/cm^2)";
+// VARIABLES //
+unsigned long previousMillis = 0; 
 String message = "";
 float uvIntensity = 0.0;
-float RES = 1023.0;//ADC resolution 1023
-float REF = 3.684;//variable obtained through calibration
-unsigned long previousMillis = 0; 
 
+// INSTANCES //
 File myFile;
 Ticker blinker;
 RTC_DS1307 rtc;
 
+// FUNCTION PROTOTYPES //
 void changeState();
 float avgVoltage(int nReadings);
 float voltToIntensity(float voltage);
@@ -44,6 +52,7 @@ void printDirectory();
 String currentTime();
 String addZero(int number);
 
+// MAIN SETUP //
 void setup() {
   // Open serial communications and wait for port to open:
   if(debug) Serial.begin(9600);
@@ -108,14 +117,17 @@ void setup() {
   ESP.deepSleep(sleep_time);
 }
 
+// MAIN LOOP //
 void loop() {
   
 }
 
+// BLINK FOR LED //
 void changeState(){
   digitalWrite(LED, !(digitalRead(LED)));  //Invert Current State of LED  
 }
 
+// GET AVERAGE VOLTAGE OF UV //
 float avgVoltage(int nReadings){ 
   int uvLevel = 0;
   for(int x = 0 ; x < nReadings ; x++)
@@ -127,6 +139,7 @@ float avgVoltage(int nReadings){
   return (REF / RES * uvLevel);
 }
 
+// CONVERT VOLTAGE OF UV TO UV INTENSITY //
 float voltToIntensity(float voltage){
   float in_min = 0.99;
   float in_max = 2.8;
@@ -138,6 +151,7 @@ float voltToIntensity(float voltage){
   return (voltage - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+// WRITE UV INTENSITY & DATE ON SD //
 void writingSD(String message, String file){
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
@@ -156,6 +170,7 @@ void writingSD(String message, String file){
   }
 }
 
+// READ SD DATA //
 void readingSD(String file){
   // open the file for reading:
   myFile = SD.open(file);
@@ -174,6 +189,7 @@ void readingSD(String file){
   }
 }
 
+// GET CURRENT TIME FROM RTC //
 String currentTime(){
   DateTime now = rtc.now();
   String ddmmyy = String(now.day()) +"/"+ String(now.month()) +"/"+ String(now.year());
@@ -185,6 +201,7 @@ String currentTime(){
   return ddmmyy + ", " + hhmmss;
 }
 
+// ADD ZEROS TO THE TIME //
 String addZero(int number){
   if(number<10){
     return "0" + String(number);
